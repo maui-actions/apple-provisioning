@@ -36,7 +36,7 @@ runs:
   steps:
     - shell: pwsh
       run: |
-        & dotnet tool install --global AppleDev.Tools --version 0.3.7
+        & dotnet tool install --global AppleDev.Tools --version 0.3.8
 
         $toolArgs = @("ci", "provision")
 
