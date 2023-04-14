@@ -1,0 +1,49 @@
+name: '.NET MAUI - Apple Provisioning'
+description: 'A Github action that helps provision Certificates & Provisioning Profiles for building .NET MAUI iOS and MacCatalyst apps.'
+branding:
+  icon: smartphone
+  color: purple
+inputs:
+  keychain:
+    description: 'Keychain file to import certificates to (can leave blank, will default to build.keychain-db). Example, "build.keychain-db".'
+    required: false
+  keychain-password:
+    description: 'Keychain password for the specified keychain (can leave blank).  Example, "build".'
+    required: false
+  certificate:
+    description: 'Apple certificate to import into the keychain.  This should be either the filename of the .p12/.pfx certificate itself, or the name of an environment variable containing a Base64 encoded string representation of the binary .p12/.pfx certificate file. Example, "path/to/dist.p12" or "APPLE_DIST_CERT".'
+    required: false
+  certificate-passphrase:
+    description: 'Passphrase for the specified certificate file if required.'
+    required: false
+  bundle-identifier:
+    description: 'The app bundle-identifier.  Example, "com.mycompany.myapp".'
+    required: true
+  profile-type:
+    description: 'The type of provisioning profile to download and install for the matching bundle-identifier.  Example, "IOS_APP_ADHOC".'
+    required: false
+  app-store-connect-key-id:
+    description: 'The App Store Connect API issuer ID or name of an environment variable containing the value.  Example, "ABC123XYZ". This value can also be set using the "APP_STORE_CONNECT_KEY_ID" environment variable.'
+    required: false
+  app-store-connect-issuer-id:
+    description: 'The App Store Connect API issuer ID or name of an environment variable containing the value.  Example, "aaaa-1111-22222-bbbb-cccc". This value can also be set using the "APP_STORE_CONNECT_ISSUER_ID" environment variable.'
+    required: false
+  app-store-connect-private-key:
+    description: 'The App Store Connect API private key.  This should be either the filename of the .p8 private key itself, or the name of an environment variable containing the string contents of the .p8 private key file. Example, "path/to/key.p8" or "APP_STORE_CONNECT_PRIVATE_KEY". This value can also be set using the "APP_STORE_CONNECT_PRIVATE_KEY" environment variable.'
+    required: false
+runs:
+  using: 'composite'
+  steps:
+    - shell: pwsh
+      run: |
+        & dotnet tool install --global AppleDev.Tools --version 0.3.6
+        & ./run.ps1 `
+          -Keychain "${{ inputs.keychain }}" `
+          -KeychainPassword "${{ inputs.keychain-password }}" `
+          -Certificate "${{ inputs.certificate }}" `
+          -CertificatePassphrase "${{ inputs.certificate-passphrase }}" `
+          -BundleIdentifier "${{ inputs.bundle-identifier }}" `
+          -ProfileType "${{ inputs.profile-type }}" `
+          -AppStoreConnectKeyId "${{ inputs.app-store-connect-key-id }}" `
+          -AppStoreConnectIssuerId "${{ inputs.app-store-connect-issuer-id }}" `
+          -AppStoreConnectPrivateKey "${{ inputs.app-store-connect-private-key }}"
