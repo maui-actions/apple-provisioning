@@ -40,13 +40,13 @@ runs:
 
         $toolArgs = @('ci','provision')
 
-        $keychain = "${{ inputs.keychain }}"
-        $keychainPassword = "${{ inputs.keychain-password }}"
-        $certificate = "${{ inputs.certificate }}"
-        $certificatePassphrase = "${{ inputs.certificate-passphrase }}"
-        $appStoreConnectKeyId = "${{ inputs.app-store-connect-key-id }}"
-        $appStoreConnectIssuerId = "${{ inputs.app-store-connect-issuer-id }}"
-        $appStoreConnectPrivateKey = "${{ inputs.app-store-connect-private-key }}"
+        $keychain = "${{ inputs.keychain }}".Trim()
+        $keychainPassword = "${{ inputs.keychain-password }}".Trim()
+        $certificate = "${{ inputs.certificate }}".Trim()
+        $certificatePassphrase = "${{ inputs.certificate-passphrase }}".Trim()
+        $appStoreConnectKeyId = "${{ inputs.app-store-connect-key-id }}".Trim()
+        $appStoreConnectIssuerId = "${{ inputs.app-store-connect-issuer-id }}".Trim()
+        $appStoreConnectPrivateKey = "${{ inputs.app-store-connect-private-key }}".Trim()
         $profileTypes = "${{ inputs.profile-types }}".Split(',')
         $bundleIdentifiers = "${{ inputs.bundle-identifiers }}".Split(',')
 
@@ -87,22 +87,31 @@ runs:
 
         foreach ($profileType in $profileTypes) {
           if ($profileType) {
-            $toolArgs += '--profile-type'
-            $toolArgs += "'$profileType'"
+            $profileType = $profileType.Trim()
+            if ($profileType) {
+              $toolArgs += '--profile-type'
+              $toolArgs += "'$profileType'"
+            }
           }
         }
 
         foreach ($bundleIdentifier in $bundleIdentifiers) {
           if ($bundleIdentifier) {
-            $toolArgs += '--bundle-identifier'
-            $toolArgs += "'$bundleIdentifier'"
+            $bundleIdentifier = $bundleIdentifier.Trim()
+            if ($bundleIdentifier) {
+              $toolArgs += '--bundle-identifier'
+              $toolArgs += "'$bundleIdentifier'"
+            }
           }
         }
 
         $toolArgsStr = $toolArgs -Join ' '
 
-        apple $toolArgsStr
-
+        try {
+          apple $toolArgsStr
+        } catch {
+          exit 1
+        }
         if ($LASTEXITCODE -ne 0) {
           exit $LASTEXITCODE
         }
