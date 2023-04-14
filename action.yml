@@ -86,15 +86,19 @@ runs:
         }
 
         foreach ($profileType in $profileTypes) {
-          $toolArgs += '--profile-type'
-          $toolArgs += "'$profileType'"
+          if ($bundleIdentifier) {
+            $toolArgs += '--profile-type'
+            $toolArgs += "'$profileType'"
+          }
         }
 
         foreach ($bundleIdentifier in $bundleIdentifiers) {
-          $toolArgs += '--bundle-identifier'
-          $toolArgs += "'$bundleIdentifier'"
+          if ($bundleIdentifier) {
+            $toolArgs += '--bundle-identifier'
+            $toolArgs += "'$bundleIdentifier'"
+          }
         }
 
         $toolArgsStr = $toolArgs -Join ' '
 
-        & apple $toolArgsStr
+        apple $toolArgsStr
