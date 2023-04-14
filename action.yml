@@ -38,7 +38,7 @@ runs:
       run: |
         & dotnet tool install --global AppleDev.Tools --version 0.3.6
 
-        $toolArgs = @()
+        $toolArgs = @("ci", "provision")
 
         $keychain = "${{ inputs.keychain }}".Trim()
         $keychainPassword = "${{ inputs.keychain-password }}".Trim()
