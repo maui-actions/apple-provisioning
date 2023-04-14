@@ -52,37 +52,37 @@ runs:
 
         if ($keychain) {
           $toolArgs += '--keychain'
-          $toolArgs += "'$keychain'"
+          $toolArgs += $keychain
         }
 
         if ($keychainPassword) {
           $toolArgs += '--keychain-password'
-          $toolArgs += "'$keychainPassword'"
+          $toolArgs += $keychainPassword
         }
 
         if ($certificate) {
           $toolArgs += '--certificate'
-          $toolArgs += "'$certificate'"
+          $toolArgs += $certificate
         }
 
         if ($certificatePassphrase) {
           $toolArgs += '--certificate-passphrase'
-          $toolArgs += "'$certificatePassphrase'"
+          $toolArgs += $certificatePassphrase
         }
 
         if ($appStoreConnectKeyId) {
           $toolArgs += '--app-store-connect-key-id'
-          $toolArgs += "'$appStoreConnectKeyId'"
+          $toolArgs += $appStoreConnectKeyId
         }
 
         if ($appStoreConnectIssuerId) {
           $toolArgs += '--app-store-connect-issuer-id'
-          $toolArgs += "'$appStoreConnectIssuerId'"
+          $toolArgs += $appStoreConnectIssuerId
         }
 
         if ($appStoreConnectPrivateKey) {
           $toolArgs += '--app-store-connect-private-key'
-          $toolArgs += "'$appStoreConnectPrivateKey'"
+          $toolArgs += $appStoreConnectPrivateKey
         }
 
         foreach ($profileType in $profileTypes) {
@@ -90,7 +90,7 @@ runs:
             $profileType = $profileType.Trim()
             if ($profileType) {
               $toolArgs += '--profile-type'
-              $toolArgs += "'$profileType'"
+              $toolArgs += $profileType
             }
           }
         }
@@ -100,7 +100,7 @@ runs:
             $bundleIdentifier = $bundleIdentifier.Trim()
             if ($bundleIdentifier) {
               $toolArgs += '--bundle-identifier'
-              $toolArgs += "'$bundleIdentifier'"
+              $toolArgs += $bundleIdentifier
             }
           }
         }
@@ -108,7 +108,7 @@ runs:
         $toolArgsStr = $toolArgs -Join ' '
 
         try {
-          apple $toolArgsStr
+          & "apple $toolArgsStr"
         } catch {
           exit 1
         }
