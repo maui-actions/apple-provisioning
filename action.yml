@@ -108,7 +108,7 @@ runs:
         $toolArgsStr = $toolArgs -Join ' '
 
         try {
-          & dotnet apple ci provision $toolArgsStr
+          & "apple ci provision $toolArgsStr"
         } catch {
           exit 1
         }
