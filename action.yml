@@ -16,11 +16,11 @@ inputs:
   certificate-passphrase:
     description: 'Passphrase for the specified certificate file if required.'
     required: false
-  bundle-identifier:
-    description: 'The app bundle-identifier.  Example, "com.mycompany.myapp".'
+  bundle-identifiers:
+    description: 'Comma separated list of one or more app bundle-identifiers to filter provisioning profiles for.  Example, "com.mycompany.myapp" or "com.mycompany.myapp1,com.mycompany.myapp2".'
     required: true
-  profile-type:
-    description: 'The type of provisioning profile to download and install for the matching bundle-identifier.  Example, "IOS_APP_ADHOC".'
+  profile-types:
+    description: 'Comma separated list of one or more types of provisioning profiles to download and install for the matching bundle-identifier(s).  Example, "IOS_APP_ADHOC" OR "IOS_APP_ADHOC,IOS_APP_STORE".'
     required: false
   app-store-connect-key-id:
     description: 'The App Store Connect API issuer ID or name of an environment variable containing the value.  Example, "ABC123XYZ". This value can also be set using the "APP_STORE_CONNECT_KEY_ID" environment variable.'
@@ -37,13 +37,64 @@ runs:
     - shell: pwsh
       run: |
         & dotnet tool install --global AppleDev.Tools --version 0.3.6
-        & ./run.ps1 `
-          -Keychain "${{ inputs.keychain }}" `
-          -KeychainPassword "${{ inputs.keychain-password }}" `
-          -Certificate "${{ inputs.certificate }}" `
-          -CertificatePassphrase "${{ inputs.certificate-passphrase }}" `
-          -BundleIdentifier "${{ inputs.bundle-identifier }}" `
-          -ProfileType "${{ inputs.profile-type }}" `
-          -AppStoreConnectKeyId "${{ inputs.app-store-connect-key-id }}" `
-          -AppStoreConnectIssuerId "${{ inputs.app-store-connect-issuer-id }}" `
-          -AppStoreConnectPrivateKey "${{ inputs.app-store-connect-private-key }}"
+
+        $toolArgs = @('ci','provision')
+
+        $keychain = "${{ inputs.keychain }}"
+        $keychainPassword = "${{ inputs.keychain-password }}"
+        $certificate = "${{ inputs.certificate }}"
+        $certificatePassphrase = "${{ inputs.certificate-passphrase }}"
+        $appStoreConnectKeyId = "${{ inputs.app-store-connect-key-id }}"
+        $appStoreConnectIssuerId = "${{ inputs.app-store-connect-issuer-id }}"
+        $appStoreConnectPrivateKey = "${{ inputs.app-store-connect-private-key }}"
+        $profileTypes = "${{ inputs.profile-types }}".Split(',')
+        $bundleIdentifiers = "${{ inputs.bundle-identifiers }}".Split(',')
+
+        if ($keychain) {
+          $toolArgs += '--keychain'
+          $toolArgs += "'$keychain'"
+        }
+
+        if ($keychainPassword) {
+          $toolArgs += '--keychain-password'
+          $toolArgs += "'$keychainPassword'"
+        }
+
+        if ($certificate) {
+          $toolArgs += '--certificate'
+          $toolArgs += "'$certificate'"
+        }
+
+        if ($certificatePassphrase) {
+          $toolArgs += '--certificate-passphrase'
+          $toolArgs += "'$certificatePassphrase'"
+        }
+
+        if ($appStoreConnectKeyId) {
+          $toolArgs += '--app-store-connect-key-id'
+          $toolArgs += "'$appStoreConnectKeyId'"
+        }
+
+        if ($appStoreConnectIssuerId) {
+          $toolArgs += '--app-store-connect-issuer-id'
+          $toolArgs += "'$appStoreConnectIssuerId'"
+        }
+
+        if ($appStoreConnectPrivateKey) {
+          $toolArgs += '--app-store-connect-private-key'
+          $toolArgs += "'$appStoreConnectPrivateKey'"
+        }
+
+        foreach ($profileType in $profileTypes) {
+          $toolArgs += '--profile-type'
+          $toolArgs += "'$profileType'"
+        }
+
+        foreach ($bundleIdentifier in $bundleIdentifiers) {
+          $toolArgs += '--bundle-identifier'
+          $toolArgs += "'$bundleIdentifier'"
+        }
+
+        $toolArgsStr = $toolArgs -Join ' '
+
+        & apple $toolArgsStr
