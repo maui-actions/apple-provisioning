@@ -71,17 +71,17 @@ runs:
         }
 
         if ($appStoreConnectKeyId) {
-          $toolArgs += '--app-store-connect-key-id'
+          $toolArgs += '--api-key-id'
           $toolArgs += $appStoreConnectKeyId
         }
 
         if ($appStoreConnectIssuerId) {
-          $toolArgs += '--app-store-connect-issuer-id'
+          $toolArgs += '--api-issuer-id'
           $toolArgs += $appStoreConnectIssuerId
         }
 
         if ($appStoreConnectPrivateKey) {
-          $toolArgs += '--app-store-connect-private-key'
+          $toolArgs += '--api-private-key'
           $toolArgs += $appStoreConnectPrivateKey
         }
 
