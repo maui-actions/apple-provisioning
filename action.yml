@@ -51,64 +51,62 @@ runs:
         $bundleIdentifiers = "${{ inputs.bundle-identifiers }}".Split(',')
 
         if ($keychain) {
-          $toolArgs += '--keychain'
+          $toolArgs += "--keychain"
           $toolArgs += $keychain
         }
 
         if ($keychainPassword) {
-          $toolArgs += '--keychain-password'
+          $toolArgs += "--keychain-password"
           $toolArgs += $keychainPassword
         }
 
         if ($certificate) {
-          $toolArgs += '--certificate'
+          $toolArgs += "--certificate"
           $toolArgs += $certificate
         }
 
         if ($certificatePassphrase) {
-          $toolArgs += '--certificate-passphrase'
+          $toolArgs += "--certificate-passphrase"
           $toolArgs += $certificatePassphrase
         }
 
         if ($appStoreConnectKeyId) {
-          $toolArgs += '--api-key-id'
+          $toolArgs += "--api-key-id"
           $toolArgs += $appStoreConnectKeyId
         }
 
         if ($appStoreConnectIssuerId) {
-          $toolArgs += '--api-issuer-id'
+          $toolArgs += "--api-issuer-id"
           $toolArgs += $appStoreConnectIssuerId
         }
 
         if ($appStoreConnectPrivateKey) {
-          $toolArgs += '--api-private-key'
+          $toolArgs += "--api-private-key"
           $toolArgs += $appStoreConnectPrivateKey
         }
 
         foreach ($profileType in $profileTypes) {
           if ($profileType) {
-            $profileType = $profileType.Trim()
-            if ($profileType) {
-              $toolArgs += '--profile-type'
-              $toolArgs += $profileType
-            }
+          $profileType = $profileType.Trim()
+          if ($profileType) {
+            $toolArgs += "--profile-type"
+            $toolArgs += $profileType
+          }
           }
         }
 
         foreach ($bundleIdentifier in $bundleIdentifiers) {
           if ($bundleIdentifier) {
-            $bundleIdentifier = $bundleIdentifier.Trim()
-            if ($bundleIdentifier) {
-              $toolArgs += '--bundle-identifier'
-              $toolArgs += $bundleIdentifier
-            }
+          $bundleIdentifier = $bundleIdentifier.Trim()
+          if ($bundleIdentifier) {
+            $toolArgs += "--bundle-identifier"
+            $toolArgs += $bundleIdentifier
+          }
           }
         }
 
-        $toolArgsStr = $toolArgs -Join ' '
-
         try {
-          apple ci provision $toolArgsStr
+          & apple $toolArgs
         } catch {
           write-host $_
           exit 1
