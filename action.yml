@@ -38,7 +38,7 @@ runs:
       run: |
         & dotnet tool install --global AppleDev.Tools --version 0.3.6
 
-        $toolArgs = @('ci','provision')
+        $toolArgs = @()
 
         $keychain = "${{ inputs.keychain }}".Trim()
         $keychainPassword = "${{ inputs.keychain-password }}".Trim()
@@ -108,7 +108,7 @@ runs:
         $toolArgsStr = $toolArgs -Join ' '
 
         try {
-          & "apple $toolArgsStr"
+          & dotnet apple ci provision $toolArgsStr
         } catch {
           exit 1
         }
