@@ -108,8 +108,9 @@ runs:
         $toolArgsStr = $toolArgs -Join ' '
 
         try {
-          & "apple ci provision $toolArgsStr"
+          apple ci provision $toolArgsStr
         } catch {
+          write-host $_
           exit 1
         }
         if ($LASTEXITCODE -ne 0) {
