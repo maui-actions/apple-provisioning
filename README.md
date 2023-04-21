@@ -56,7 +56,7 @@ env:
   APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
 
 steps:
-- uses: maui-actions/apple-provisioning@1
+- uses: maui-actions/apple-provisioning@2
   with:
     certificate: APPLE_CERTIFICATE
     certificate-passphrase: ${{ secrets.APPLE_CERTIFICATE_PASSPHRASE }}
@@ -68,7 +68,7 @@ steps:
 
 ```
 steps:
-- uses: maui-actions/apple-provisioning@1
+- uses: maui-actions/apple-provisioning@2
   with:
     keychain: 'build.keychain-db'
     keychain-password: 'build1234'
