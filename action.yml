@@ -31,12 +31,18 @@ inputs:
   app-store-connect-private-key:
     description: 'The App Store Connect API private key.  This should be either the filename of the .p8 private key itself, or the name of an environment variable containing the string contents of the .p8 private key file. Example, "path/to/key.p8" or "APP_STORE_CONNECT_PRIVATE_KEY". This value can also be set using the "APP_STORE_CONNECT_PRIVATE_KEY" environment variable.'
     required: false
+  install-app-store-connect-private-key:
+    description: 'Flag to indicate if the App Store Connect private key should be saved to disk.  Default is false.'
+    required: false
+  app-store-connect-private-key-directory:
+    description: 'Directory to save the App Store Connect private key to.  Default is ~/private_keys'
+    required: false
 runs:
   using: 'composite'
   steps:
     - shell: pwsh
       run: |
-        & dotnet tool install --global AppleDev.Tools --version 0.4.0
+        & dotnet tool install --global AppleDev.Tools --version 0.5.0
 
         $toolArgs = @("ci", "provision")
 
@@ -47,6 +53,8 @@ runs:
         $appStoreConnectKeyId = "${{ inputs.app-store-connect-key-id }}".Trim()
         $appStoreConnectIssuerId = "${{ inputs.app-store-connect-issuer-id }}".Trim()
         $appStoreConnectPrivateKey = "${{ inputs.app-store-connect-private-key }}".Trim()
+        $installAppStoreConnectPrivateKey = "${{ inputs.install-app-store-connect-private-key }}".Trim()
+        $appStoreConnectPrivateKeyDirectory = "${{ inputs.app-store-connect-private-key-directory }}".Trim()
         $profileTypes = "${{ inputs.profile-types }}".Split(',')
         $bundleIdentifiers = "${{ inputs.bundle-identifiers }}".Split(',')
 
@@ -83,6 +91,15 @@ runs:
         if ($appStoreConnectPrivateKey) {
           $toolArgs += "--api-private-key"
           $toolArgs += $appStoreConnectPrivateKey
+        }
+
+        if ($installAppStoreConnectPrivateKey) {
+          $toolArgs += "--install-api-private-key"
+        }
+
+        if ($appStoreConnectPrivateKeyDirectory) {
+          $toolArgs += "--api-private-key-dir"
+          $toolArgs += $appStoreConnectPrivateKeyDirectory
         }
 
         foreach ($profileType in $profileTypes) {
