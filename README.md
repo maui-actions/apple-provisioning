@@ -105,6 +105,7 @@ Issuer ID for the App Store Connect API Key.  This may be specified as an input,
 
 #### **app-store-connect-private-key**
 Private Key (.p8) file contents for the App Store Connect API Key.  This may be specified as an input, or can be inferred from the contents of the environment variable _APP_STORE_CONNECT_PRIVATE_KEY_
+The input is a base64 string of the p8 file between parts `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----`
 
 #### **install-app-store-connect-private-key** (Optional)
 Flag to indicate if the App Store Connect private key should be saved to disk.  Default is `false`.
